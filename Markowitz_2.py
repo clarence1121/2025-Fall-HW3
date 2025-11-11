@@ -9,6 +9,7 @@ import quantstats as qs
 import gurobipy as gp
 import warnings
 import argparse
+import sys
 
 """
 Project Setup
@@ -228,12 +229,27 @@ if __name__ == "__main__":
 
     if args.score:
         if ("one" in args.score) or ("spy" in args.score):
+            # 這一段保留給你自己在本機測 one / spy 用,
+            # 不會被 GitHub Classroom 的 workflow 用到
             if "one" in args.score:
                 judge.check_sharp_ratio_greater_than_one()
             if "spy" in args.score:
                 judge.check_sharp_ratio_greater_than_spy()
+
         elif "all" in args.score:
-            print(f"==> total Score = {judge.check_all_answer()} <==")
+            # GitHub Classroom autograding 用的情境：python Markowitz_2.py --score all
+            total_score = judge.check_all_answer()
+            print(f"==> total Score = {total_score} <==")
+
+            # 這裡決定 exit code：
+            # 你的滿分是 15 + 15 = 30
+            FULL_SCORE = 30
+            if total_score == FULL_SCORE:
+                # 兩題都對 → exit code 0 → autograder 給 50/50
+                sys.exit(0)
+            else:
+                # 只要有題目錯 → exit code 1 → autograder 給 0/50
+                sys.exit(1)
 
     if args.allocation:
         if "mp" in args.allocation:

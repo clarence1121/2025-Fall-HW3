@@ -37,7 +37,7 @@ jobs:
           setup-command: ''
           command: python Markowitz.py --score all
           timeout: 10
-          max-score: 50
+          max-score: 70
 
       - name: Run Markowitz 2 Test
         id: markowitz-2-test
@@ -47,7 +47,7 @@ jobs:
           setup-command: ''
           command: python Markowitz_2.py --score all
           timeout: 10
-          max-score: 50
+          max-score: 30
 
       - name: Autograding Reporter
         uses: classroom-resources/autograding-grading-reporter@v1
