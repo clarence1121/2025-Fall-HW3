@@ -9,6 +9,7 @@ import quantstats as qs
 import gurobipy as gp
 import argparse
 import warnings
+import sys
 
 """
 Project Setup
@@ -460,14 +461,29 @@ if __name__ == "__main__":
 
     if args.score:
         if ("eqw" in args.score) or ("rp" in args.score) or ("mv" in args.score):
+            # 這一段保留給你自己在本機測 eqw / rp / mv 用,
+            # 不會被 GitHub Classroom 的 workflow 用到
             if "eqw" in args.score:
                 judge.check_answer_eqw(judge.eqw)
             if "rp" in args.score:
                 judge.check_answer_rp(judge.rp)
             if "mv" in args.score:
                 judge.check_answer_mv_list(judge.mv_list)
+
         elif "all" in args.score:
-            print(f"==> total Score = {judge.check_all_answer()} <==")
+            # GitHub Classroom autograding 用的情境：python Markowitz.py --score all
+            total_score = judge.check_all_answer()
+            print(f"==> total Score = {total_score} <==")
+
+            # 這裡決定 exit code：
+            # 你的滿分是 20 + 20 + 30 = 70
+            FULL_SCORE = 70
+            if total_score == FULL_SCORE:
+                # 三題都對 → exit code 0 → autograder 給 50/50
+                sys.exit(0)
+            else:
+                # 只要有題目錯 → exit code 1 → autograder 給 0/50
+                sys.exit(1)
 
     """
     NOTE: For Allocation
