@@ -49,7 +49,7 @@ jobs:
       - name: Autograding Reporter
         uses: classroom-resources/autograding-grading-reporter@v1
         env:
-          MARKOWITZ_TEST_RESULTS: "${{ steps.markowitz-test.outputs.result }}"
-          MARKOWITZ_2_TEST_RESULTS: "${{ steps.markowitz-2-test.outputs.result }}"
+          MARKOWITZ_TEST_RESULTS: ${{ steps.markowitz-test.outputs.result }}
+          MARKOWITZ_2_TEST_RESULTS: ${{ steps.markowitz-2-test.outputs.result }}
         with:
           runners: markowitz-test,markowitz-2-test
