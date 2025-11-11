@@ -5,7 +5,6 @@ on:
   - push
   - repository_dispatch
 
-
 permissions:
   checks: write
   actions: read
@@ -34,7 +33,6 @@ jobs:
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Markowitz Test
-          setup-command: ''
           command: python Markowitz.py --score all
           timeout: 10
           max-score: 50
@@ -44,7 +42,6 @@ jobs:
         uses: classroom-resources/autograding-command-grader@v1
         with:
           test-name: Markowitz 2 Test
-          setup-command: ''
           command: python Markowitz_2.py --score all
           timeout: 10
           max-score: 50
@@ -52,7 +49,9 @@ jobs:
       - name: Autograding Reporter
         uses: classroom-resources/autograding-grading-reporter@v1
         env:
-          MARKOWITZ-TEST_RESULTS: "${{steps.markowitz-test.outputs.result}}"
-          MARKOWITZ-2-TEST_RESULTS: "${{steps.markowitz-2-test.outputs.result}}"
+          MARKOWITZ_TEST_RESULTS: "${{ steps.markowitz-test.outputs.result }}"
+          MARKOWITZ_2_TEST_RESULTS: "${{ steps.markowitz-2-test.outputs.result }}"
         with:
-          runners: markowitz-test,markowitz-2-test
+          runners: |
+            markowitz-test
+            markowitz-2-test
