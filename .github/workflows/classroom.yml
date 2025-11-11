@@ -52,6 +52,4 @@ jobs:
           MARKOWITZ_TEST_RESULTS: "${{ steps.markowitz-test.outputs.result }}"
           MARKOWITZ_2_TEST_RESULTS: "${{ steps.markowitz-2-test.outputs.result }}"
         with:
-          runners: |
-            markowitz-test
-            markowitz-2-test
+          runners: markowitz-test,markowitz-2-test
