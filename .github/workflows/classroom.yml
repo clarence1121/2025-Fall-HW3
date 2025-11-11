@@ -1,0 +1,58 @@
+name: Autograding Tests
+run-name: Autograding
+
+on:
+  - push
+  - repository_dispatch
+
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Markowitz Test
+        id: markowitz-test
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Markowitz Test
+          setup-command: ''
+          command: python Markowitz.py --score all
+          timeout: 10
+          max-score: 50
+
+      - name: Run Markowitz 2 Test
+        id: markowitz-2-test
+        uses: classroom-resources/autograding-command-grader@v1
+        with:
+          test-name: Markowitz 2 Test
+          setup-command: ''
+          command: python Markowitz_2.py --score all
+          timeout: 10
+          max-score: 50
+
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          MARKOWITZ-TEST_RESULTS: "${{steps.markowitz-test.outputs.result}}"
+          MARKOWITZ-2-TEST_RESULTS: "${{steps.markowitz-2-test.outputs.result}}"
+        with:
+          runners: markowitz-test,markowitz-2-test
