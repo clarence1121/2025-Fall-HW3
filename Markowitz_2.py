@@ -100,99 +100,10 @@ class MyPortfolio:
         return self.portfolio_weights, self.portfolio_returns
 
 
-"""
-Assignment Judge
-
-The following functions will help check your solution.
-"""
-
-
-class AssignmentJudge:
-    def __init__(self):
-        self.mp = MyPortfolio(df, "SPY").get_results()
-        self.Bmp = MyPortfolio(Bdf, "SPY").get_results()
-
-    def plot_performance(self, price, strategy):
-        # Plot cumulative returns
-        _, ax = plt.subplots()
-        returns = price.pct_change().fillna(0)
-        (1 + returns["SPY"]).cumprod().plot(ax=ax, label="SPY")
-        (1 + strategy[1]["Portfolio"]).cumprod().plot(ax=ax, label=f"MyPortfolio")
-
-        ax.set_title("Cumulative Returns")
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Cumulative Returns")
-        ax.legend()
-        plt.show()
-        return None
-
-    def plot_allocation(self, df_weights):
-        df_weights = df_weights.fillna(0).ffill()
-
-        # long only
-        df_weights[df_weights < 0] = 0
-
-        # Plotting
-        _, ax = plt.subplots()
-        df_weights.plot.area(ax=ax)
-        ax.set_xlabel("Date")
-        ax.set_ylabel("Allocation")
-        ax.set_title("Asset Allocation Over Time")
-        plt.show()
-        return None
-
-    def report_metrics(self, price, strategy, show=False):
-        df_bl = pd.DataFrame()
-        returns = price.pct_change().fillna(0)
-        df_bl["SPY"] = returns["SPY"]
-        df_bl["MP"] = pd.to_numeric(strategy[1]["Portfolio"], errors="coerce")
-        sharpe_ratio = qs.stats.sharpe(df_bl)
-
-        if show == True:
-            qs.reports.metrics(df_bl, mode="full", display=show)
-
-        return sharpe_ratio
-
-    def cumulative_product(self, dataframe):
-        (1 + dataframe.pct_change().fillna(0)).cumprod().plot()
-
-    def check_sharp_ratio_greater_than_one(self):
-        if not self.check_portfolio_position(self.mp[0]):
-            return 0
-        if self.report_metrics(df, self.mp)[1] > 1:
-            print("Problem 4.1 Success - Get 15 points")
-            return 15
-        else:
-            print("Problem 4.1 Fail")
-        return 0
-
-    def check_sharp_ratio_greater_than_spy(self):
-        if not self.check_portfolio_position(self.mp[0]):
-            return 0
-        if (
-            self.report_metrics(Bdf, self.Bmp)[1]
-            > self.report_metrics(Bdf, self.Bmp)[0]
-        ):
-            print("Problem 4.2 Success - Get 15 points")
-            return 15
-        else:
-            print("Problem 4.2 Fail")
-        return 0
-
-    def check_portfolio_position(self, portfolio_weights):
-        if (portfolio_weights.sum(axis=1) <= 1.01).all():
-            return True
-        print("Portfolio Position Exceeds 1. No Leverage.")
-        return False
-
-    def check_all_answer(self):
-        score = 0
-        score += self.check_sharp_ratio_greater_than_one()
-        score += self.check_sharp_ratio_greater_than_spy()
-        return score
-
-
 if __name__ == "__main__":
+    # Import grading system (protected file in GitHub Classroom)
+    from grader_2 import AssignmentJudge
+    
     parser = argparse.ArgumentParser(
         description="Introduction to Fintech Assignment 3 Part 12"
     )
@@ -226,51 +137,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     judge = AssignmentJudge()
-
-    if args.score:
-        if ("one" in args.score) or ("spy" in args.score):
-            # 這一段保留給你自己在本機測 one / spy 用,
-            # 不會被 GitHub Classroom 的 workflow 用到
-            if "one" in args.score:
-                judge.check_sharp_ratio_greater_than_one()
-            if "spy" in args.score:
-                judge.check_sharp_ratio_greater_than_spy()
-
-        elif "all" in args.score:
-            # GitHub Classroom autograding 用的情境：python Markowitz_2.py --score all
-            total_score = judge.check_all_answer()
-            print(f"==> total Score = {total_score} <==")
-
-            # 這裡決定 exit code：
-            # 你的滿分是 15 + 15 = 30
-            FULL_SCORE = 30
-            if total_score == FULL_SCORE:
-                # 兩題都對 → exit code 0 → autograder 給 50/50
-                sys.exit(0)
-            else:
-                # 只要有題目錯 → exit code 1 → autograder 給 0/50
-                sys.exit(1)
-
-    if args.allocation:
-        if "mp" in args.allocation:
-            judge.plot_allocation(judge.mp[0])
-        if "bmp" in args.allocation:
-            judge.plot_allocation(judge.Bmp[0])
-
-    if args.performance:
-        if "mp" in args.performance:
-            judge.plot_performance(df, judge.mp)
-        if "bmp" in args.performance:
-            judge.plot_performance(Bdf, judge.Bmp)
-
-    if args.report:
-        if "mp" in args.report:
-            judge.report_metrics(df, judge.mp, show=True)
-        if "bmp" in args.report:
-            judge.report_metrics(Bdf, judge.Bmp, show=True)
-
-    if args.cumulative:
-        if "mp" in args.cumulative:
-            judge.cumulative_product(df)
-        if "bmp" in args.cumulative:
-            judge.cumulative_product(Bdf)
+    
+    # All grading logic is protected in grader_2.py
+    judge.run_grading(args)
