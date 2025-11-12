@@ -62,16 +62,27 @@ jobs:
           timeout: 10
           max-score: 30
 
-      - name: Run Markowitz 2 Test
-        id: markowitz-2-test
+      - name: Problem 4.1 - Sharpe Ratio > 1
+        id: problem-4-1-one
         uses: classroom-resources/autograding-command-grader@v1
         continue-on-error: true
         with:
-          test-name: Markowitz 2 Test
+          test-name: Problem 4.1 - Sharpe Ratio > 1
           setup-command: ''
-          command: python Markowitz_2.py --score all
+          command: python Markowitz_2.py --score one
           timeout: 10
-          max-score: 30
+          max-score: 15
+
+      - name: Problem 4.2 - Sharpe Ratio > SPY
+        id: problem-4-2-spy
+        uses: classroom-resources/autograding-command-grader@v1
+        continue-on-error: true
+        with:
+          test-name: Problem 4.2 - Sharpe Ratio > SPY
+          setup-command: ''
+          command: python Markowitz_2.py --score spy
+          timeout: 10
+          max-score: 15
 
       - name: Autograding Reporter
         uses: classroom-resources/autograding-grading-reporter@v1
@@ -79,6 +90,7 @@ jobs:
           PROBLEM-1-EQW_RESULTS: "${{steps.problem-1-eqw.outputs.result}}"
           PROBLEM-2-RP_RESULTS: "${{steps.problem-2-rp.outputs.result}}"
           PROBLEM-3-MV_RESULTS: "${{steps.problem-3-mv.outputs.result}}"
-          MARKOWITZ-2-TEST_RESULTS: "${{steps.markowitz-2-test.outputs.result}}"
+          PROBLEM-4-1-ONE_RESULTS: "${{steps.problem-4-1-one.outputs.result}}"
+          PROBLEM-4-2-SPY_RESULTS: "${{steps.problem-4-2-spy.outputs.result}}"
         with:
-          runners: problem-1-eqw,problem-2-rp,problem-3-mv,markowitz-2-test
+          runners: problem-1-eqw,problem-2-rp,problem-3-mv,problem-4-1-one,problem-4-2-spy

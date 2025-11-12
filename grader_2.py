@@ -105,25 +105,31 @@ class AssignmentJudge:
         Main grading function with exit code logic (protected from student modification)
         """
         if args.score:
-            if ("one" in args.score) or ("spy" in args.score):
-                # 這一段保留給你自己在本機測 one / spy 用,
-                # 不會被 GitHub Classroom 的 workflow 用到
-                if "one" in args.score:
-                    self.check_sharp_ratio_greater_than_one()
-                if "spy" in args.score:
-                    self.check_sharp_ratio_greater_than_spy()
-
-            elif "all" in args.score:
-                # GitHub Classroom autograding 用的情境：python Markowitz_2.py --score all
-                total_score = self.check_all_answer()
-                print(f"==> total Score = {total_score} <==")
-                FULL_SCORE = 30
-                if total_score == FULL_SCORE:
-                    # 兩題都對 → exit code 0 → autograder 給 30/30
-                    sys.exit(0)
+            # args.score 是一個列表，因為使用了 action="append"
+            score_list = args.score
+            
+            if "one" in score_list:
+                # Problem 4.1 單獨評分 (15分)
+                score = self.check_sharp_ratio_greater_than_one()
+                if score == 15:
+                    sys.exit(0)  # 正確 -> exit code 0
                 else:
-                    # 只要有題目錯 → exit code 1 → autograder 給 0/30
-                    sys.exit(1)
+                    sys.exit(1)  # 錯誤 -> exit code 1
+                    
+            elif "spy" in score_list:
+                # Problem 4.2 單獨評分 (15分)
+                score = self.check_sharp_ratio_greater_than_spy()
+                if score == 15:
+                    sys.exit(0)  # 正確 -> exit code 0
+                else:
+                    sys.exit(1)  # 錯誤 -> exit code 1
+
+            elif "all" in score_list:
+                # 顯示所有題目的評分結果（用於本地測試）
+                total_score = self.check_all_answer()
+                print(f"==> Total Score = {total_score} / 30 <==")
+                # 本地測試不需要 exit，讓程式繼續執行
+                return
 
         if args.allocation:
             if "mp" in args.allocation:
