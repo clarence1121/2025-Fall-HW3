@@ -113,6 +113,22 @@ class RiskParityPortfolio:
         """
         TODO: Complete Task 2 Below
         """
+        # for i in range(self.lookback+1, len(df_returns)):  # MODIFIED LINE
+        #     # Get the returns for the lookback period
+        #     lookback_returns = df_returns[assets].iloc[i - self.lookback : i]
+            
+        #     # Calculate the standard deviation (volatility) of returns for each asset
+        #     # Adding a small epsilon to avoid division by zero if std is 0
+        #     volatilities = lookback_returns.std() + 1e-10 
+            
+        #     # Calculate the inverse of volatilities
+        #     inv_volatilities = 1 / volatilities
+            
+        #     # Normalize the inverse volatilities to get the weights
+        #     weights = inv_volatilities / inv_volatilities.sum()
+            
+        #     # Assign the calculated weights to the portfolio_weights DataFrame
+        #     self.portfolio_weights.loc[df_returns.index[i], assets] = weights
 
         """
         TODO: Complete Task 2 Above

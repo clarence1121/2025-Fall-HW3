@@ -199,30 +199,39 @@ class AssignmentJudge:
         Main grading function with exit code logic (protected from student modification)
         """
         if args.score:
-            if ("eqw" in args.score) or ("rp" in args.score) or ("mv" in args.score):
-                # 這一段保留給你自己在本機測 eqw / rp / mv 用,
-                # 不會被 GitHub Classroom 的 workflow 用到
-                if "eqw" in args.score:
-                    self.check_answer_eqw(self.eqw)
-                if "rp" in args.score:
-                    self.check_answer_rp(self.rp)
-                if "mv" in args.score:
-                    self.check_answer_mv_list(self.mv_list)
-
-            elif "all" in args.score:
-                # GitHub Classroom autograding 用的情境：python Markowitz.py --score all
-                total_score = self.check_all_answer()
-                print(f"==> total Score = {total_score} <==")
-
-                # 這裡決定 exit code：
-                # 你的滿分是 20 + 20 + 30 = 70
-                FULL_SCORE = 70
-                if total_score == FULL_SCORE:
-                    # 三題都對 → exit code 0 → autograder 給 70/70
-                    sys.exit(0)
+            # args.score 是一個列表，因為使用了 action="append"
+            score_list = args.score
+            
+            if "eqw" in score_list:
+                # Problem 1 單獨評分 (20分)
+                score = self.check_answer_eqw(self.eqw)
+                if score == 20:
+                    sys.exit(0)  # 正確 -> exit code 0
                 else:
-                    # 只要有題目錯 → exit code 1 → autograder 給 0/70
-                    sys.exit(1)
+                    sys.exit(1)  # 錯誤 -> exit code 1
+                    
+            elif "rp" in score_list:
+                # Problem 2 單獨評分 (20分)
+                score = self.check_answer_rp(self.rp)
+                if score == 20:
+                    sys.exit(0)  # 正確 -> exit code 0
+                else:
+                    sys.exit(1)  # 錯誤 -> exit code 1
+                    
+            elif "mv" in score_list:
+                # Problem 3 單獨評分 (30分)
+                score = self.check_answer_mv_list(self.mv_list)
+                if score == 30:
+                    sys.exit(0)  # 正確 -> exit code 0
+                else:
+                    sys.exit(1)  # 錯誤 -> exit code 1
+
+            elif "all" in score_list:
+                # 顯示所有題目的評分結果（用於本地測試）
+                total_score = self.check_all_answer()
+                print(f"==> Total Score = {total_score} / 70 <==")
+                # 本地測試不需要 exit，讓程式繼續執行
+                return
 
         if args.allocation:
             helper = Helper()
@@ -242,3 +251,7 @@ class AssignmentJudge:
             helper = Helper()
             if "mv" in args.report:
                 helper.plot_report_metrics()
+
+
+def func():
+    pass

@@ -117,9 +117,6 @@ class AssignmentJudge:
                 # GitHub Classroom autograding 用的情境：python Markowitz_2.py --score all
                 total_score = self.check_all_answer()
                 print(f"==> total Score = {total_score} <==")
-
-                # 這裡決定 exit code：
-                # 你的滿分是 15 + 15 = 30
                 FULL_SCORE = 30
                 if total_score == FULL_SCORE:
                     # 兩題都對 → exit code 0 → autograder 給 30/30
