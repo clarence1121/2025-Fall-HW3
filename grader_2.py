@@ -105,7 +105,6 @@ class AssignmentJudge:
         Main grading function with exit code logic (protected from student modification)
         """
         if args.score:
-            # args.score 是一個列表，因為使用了 action="append"
             score_list = args.score
             
             if "one" in score_list:
@@ -125,10 +124,8 @@ class AssignmentJudge:
                     sys.exit(1)  # 錯誤 -> exit code 1
 
             elif "all" in score_list:
-                # 顯示所有題目的評分結果（用於本地測試）
                 total_score = self.check_all_answer()
                 print(f"==> Total Score = {total_score} / 30 <==")
-                # 本地測試不需要 exit，讓程式繼續執行
                 return
 
         if args.allocation:
