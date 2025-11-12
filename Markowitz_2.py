@@ -70,30 +70,7 @@ class MyPortfolio:
         """
         TODO: Complete Task 4 Below
         """
-        assets = ["XLK", "XLV"]
-        skip_periods = [
-            (pd.to_datetime("2012-04-09"), pd.to_datetime("2012-06-05")),
-            (pd.to_datetime("2015-07-17"), pd.to_datetime("2016-02-12")),
-            (pd.to_datetime("2018-01-29"), pd.to_datetime("2018-04-03")),
-            (pd.to_datetime("2018-10-03"), pd.to_datetime("2018-12-26")),
-            (pd.to_datetime("2020-02-15"), pd.to_datetime("2020-03-24")),
-        ]
-
-        for i in range(self.lookback, len(self.price)):
-            date = self.price.index[i]
-
-            # Set all to 0 if in exclusion period
-            if any(start <= date <= end for start, end in skip_periods):
-                self.portfolio_weights.loc[date] = 0.0
-                continue
-
-            past_returns = self.returns.iloc[i - self.lookback:i][assets]
-            vol = past_returns.std().replace(0, 1e-6)
-            inv_vol = 1 / vol
-            weights = inv_vol / inv_vol.sum()
-
-            self.portfolio_weights.loc[date] = 0.0
-            self.portfolio_weights.loc[date, assets] = weights.values
+        
         """
         TODO: Complete Task 4 Above
         """
