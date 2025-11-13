@@ -70,38 +70,32 @@ class MyPortfolio:
         """
         TODO: Complete Task 4 Below
         """
-        # Minimum Variance Portfolio Strategy
-        for i in range(self.lookback + 1, len(self.price)):
-            # Get historical returns for the lookback period
-            R_n = self.returns[assets].iloc[i - self.lookback : i]
-            
-            # Calculate covariance matrix
-            Sigma = R_n.cov().values
-            n = len(assets)
-            
-            # Solve minimum variance optimization using Gurobi
-            with gp.Env(empty=True) as env:
-                env.setParam("OutputFlag", 0)
-                env.start()
-                with gp.Model(env=env, name="min_variance") as model:
-                    # Decision variables: portfolio weights
-                    w = model.addMVar(n, name="w", lb=0, ub=1)
-                    
-                    # Objective: minimize portfolio variance
-                    # Portfolio variance = w^T * Sigma * w
-                    portfolio_variance = w @ Sigma @ w
-                    model.setObjective(portfolio_variance, gp.GRB.MINIMIZE)
-                    
-                    # Constraint: weights sum to 1
-                    model.addConstr(w.sum() == 1, name="budget")
-                    
-                    # Optimize
-                    model.optimize()
-                    
-                    # Extract solution
-                    if model.status == gp.GRB.OPTIMAL:
-                        weights = [w[j].X for j in range(n)]
-                        self.portfolio_weights.loc[self.price.index[i], assets] = weights
+        assets = ["XLK", "XLV"]
+        skip_periods = [
+            (pd.to_datetime("2012-04-09"), pd.to_datetime("2012-06-05")),
+            (pd.to_datetime("2015-07-17"), pd.to_datetime("2016-02-12")),
+            (pd.to_datetime("2018-01-29"), pd.to_datetime("2018-04-03")),
+            (pd.to_datetime("2018-10-03"), pd.to_datetime("2018-12-26")),
+            (pd.to_datetime("2020-02-15"), pd.to_datetime("2020-03-24")),
+        ]
+
+        for i in range(self.lookback, len(self.price)):
+            date = self.price.index[i]
+
+            # Set all to 0 if in exclusion period
+            if any(start <= date <= end for start, end in skip_periods):
+                self.portfolio_weights.loc[date] = 0.0
+                continue
+
+            past_returns = self.returns.iloc[i - self.lookback:i][assets]
+            vol = past_returns.std().replace(0, 1e-6)
+            inv_vol = 1 / vol
+            weights = inv_vol / inv_vol.sum()
+
+            self.portfolio_weights.loc[date] = 0.0
+            self.portfolio_weights.loc[date, assets] = weights.values
+
+        # self.portfolio_weights.to_csv("my_portfolio.csv", index = True)
         
         """
         TODO: Complete Task 4 Above
