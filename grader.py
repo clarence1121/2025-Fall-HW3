@@ -74,9 +74,6 @@ class Helper:
             df_bl[f"MV {i+1}"] = pd.to_numeric(
                 strategy[1]["Portfolio"], errors="coerce"
             )
-            """
-            NOTE: You can add your strategy here.
-            """
 
         qs.reports.metrics(df_bl, mode="full", display=True)
 
