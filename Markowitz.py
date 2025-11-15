@@ -99,7 +99,7 @@ Implement a risk parity strategy as dataframe "rp". Please do "not" include SPY.
 
 
 class RiskParityPortfolio:
-    def __init__(self, exclude, lookback=50+1):
+    def __init__(self, exclude, lookback=50):
         self.exclude = exclude
         self.lookback = lookback
 
@@ -113,7 +113,7 @@ class RiskParityPortfolio:
         """
         TODO: Complete Task 2 Below
         """
-        for i in range(self.lookback, len(df)):
+        for i in range(self.lookback+1, len(df)):
             date = df.index[i]
             past_returns = df_returns.iloc[i - self.lookback  : i]
             asset_returns = past_returns[assets]
