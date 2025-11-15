@@ -99,7 +99,7 @@ Implement a risk parity strategy as dataframe "rp". Please do "not" include SPY.
 
 
 class RiskParityPortfolio:
-    def __init__(self, exclude, lookback=50):
+    def __init__(self, exclude, lookback=50+1):
         self.exclude = exclude
         self.lookback = lookback
 
@@ -113,7 +113,24 @@ class RiskParityPortfolio:
         """
         TODO: Complete Task 2 Below
         """
+        for i in range(self.lookback, len(df)):
+            date = df.index[i]
+            past_returns = df_returns.iloc[i - self.lookback  : i]
+            asset_returns = past_returns[assets]
 
+            # Step 1: Compute volatilities (standard deviation)
+            sigma = asset_returns.std().replace(0, 1e-10)
+
+            # Step 2: Compute inverse volatilities
+            inv_sigma = 1.0 / sigma
+
+            # Step 3: Normalize to get weights
+            total_inv_sigma = inv_sigma.sum()
+            weights = inv_sigma / total_inv_sigma
+
+            # Step 4: Assign weights
+            self.portfolio_weights.loc[date] = 0.0
+            self.portfolio_weights.loc[date, assets] = weights.values
 
 
         """
